@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compress an Image Without Losing Quality — ImageResizer.tech</title>
+<meta name="description" content="Practical tips for compressing photos with minimal visible quality loss: format choice, resolution, and where JPEG quality settings actually matter.">
+<link rel="canonical" href="https://imageresizer.tech/compress-image-without-losing-quality.html">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23211D18'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='%23D9A13B' font-family='monospace'>⇲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#E4D8C3;color:#211D18;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:#C2412A}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-bottom:2px dashed #D2C3A3;flex-wrap:wrap;gap:8px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.02em;text-decoration:none;color:#211D18}
+.brand em{font-style:normal;color:#A8863A}
+.brand small{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:.6rem;color:#6B6153;letter-spacing:.1em;text-transform:uppercase}
+header nav{display:flex;gap:14px}
+header nav a{font-size:.8rem;font-weight:600;color:#6B6153;text-decoration:none}
+header nav a:hover{color:#211D18}
+main{max-width:720px;margin:0 auto;padding:40px 24px 20px}
+h1{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:18px}
+h2{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.01em;margin:34px 0 10px}
+p{margin-bottom:14px;color:#3A342A}
+ul,ol{margin:0 0 14px 22px;color:#3A342A}
+li{margin-bottom:8px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #D2C3A3}
+th{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#6B6153}
+.callout{border:1px solid #D2C3A3;border-left:3px solid #A8863A;border-radius:8px;padding:14px 16px;margin:18px 0;background:#FAF6EC;font-size:.93rem}
+.cards{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}
+.card{background:#FAF6EC;border:1px solid #D2C3A3;border-radius:10px;padding:18px;text-decoration:none;color:#211D18;display:block}
+.card h3{font-size:1.02rem;font-weight:700;margin-bottom:4px}
+.card p{font-size:.86rem;color:#5A544A;margin:0}
+.card .go{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:#C2412A;font-weight:600}
+.catlabel{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#6B6153;margin:28px 0 10px}
+.catlabel:first-child{margin-top:0}
+footer{border-top:2px dashed #D2C3A3;margin-top:50px;padding:24px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:#6B6153}
+footer nav{margin-top:8px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+footer nav a{color:#6B6153}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">ImageResizer<em>.tech</em> <small>kb · px · cm</small></a>
+  <nav>
+    <a href="guides.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<main>
+<h1>How to Compress an Image Without Losing (Much) Quality</h1>
+<p>"Without losing quality" is a little misleading — any lossy compression discards some information. What you actually want is compression where the loss is invisible to the eye. That's achievable, and it comes down to three things: format, resolution, and where you spend your quality budget.</p>
+<h2>1. Use JPG or WebP, not PNG, for photos</h2>
+<p>PNG's lossless compression can't shrink photographic detail much at all — a photo saved as PNG can be 5–10× larger than the same photo as a good-quality JPG, with no visible difference for a viewer. See the full <a href="jpg-vs-png-vs-webp.html">format comparison</a>.</p>
+<h2>2. Don't keep more pixels than you'll display</h2>
+<p>A 4000×3000 original squeezed down to a small file size looks worse than the same photo resized to 1200×900 first, then compressed — because compression at high resolution has to throw away more detail per pixel to hit the same file size. If the image will only ever be viewed at, say, 800px wide, resizing to roughly that size before compressing gives a visibly sharper result for the same KB.</p>
+<h2>3. Quality above ~75% has diminishing returns</h2>
+<p>JPEG quality settings aren't linear — dropping from 100% to 85% often halves the file size with a difference only a trained eye would catch. Dropping from 40% to 20% saves comparatively little more but introduces visible blockiness. If you're setting quality manually, 70–85% is usually the sweet spot.</p>
+<h2>How this resizer handles it automatically</h2>
+<p>In <b>Target KB</b> mode, the tool searches quality levels first — since that's usually the less visually damaging lever — and only reduces pixel dimensions if quality reduction alone can't reach your target. That ordering (quality before dimensions) is deliberate: it tends to produce the sharpest possible result for a given file size.</p>
+<h2>A quick before-you-compress checklist</h2>
+<ul>
+<li>Crop out anything you don't need — spending KB budget on background is wasted.</li>
+<li>Pick JPG for photos, PNG only for flat graphics or when you need transparency.</li>
+<li>If a target size feels impossible without visible damage, the honest fix is usually a smaller image, not harder compression.</li>
+</ul>
+<p>Try it on the <a href="index.html">resizer</a> — drop a photo, pick a target, and compare the before/after size shown in the result row.</p>
+</main>
+<footer>
+  IMAGERESIZER.TECH · processing happens entirely in your browser · © 2026
+  <nav>
+    <a href="index.html">Resizer</a>
+    <a href="guides.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms.html">Terms</a>
+  </nav>
+</footer>
+</body>
+</html>

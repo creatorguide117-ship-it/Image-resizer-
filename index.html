@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Resizer — Free Online Image Resizer in KB, Pixels & CM</title>
+<meta name="description" content="Free online image resizer — resize images in KB (20KB, 50KB, 100KB, 200KB), in pixels, or in cm for print and passport photos. Bulk resize supported. No upload, no sign-up — everything runs in your browser.">
+<link rel="canonical" href="https://imageresizer.tech/">
+<meta property="og:title" content="Image Resizer — resize in KB, pixels, or cm, free">
+<meta property="og:description" content="Pick a target — a KB size, exact pixels, or cm for print — drop your photo, download. Nothing is ever uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://imageresizer.tech/">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23211D18'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='%23D9A13B' font-family='monospace'>⇲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ImageResizer.tech",
+  "url": "https://imageresizer.tech/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "description": "Free browser-based image resizer. Resize images to an exact KB size, exact pixel dimensions, or physical cm size for print — with bulk support. No upload required."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"How do I resize an image to 20KB or 50KB?","acceptedAnswer":{"@type":"Answer","text":"Choose Target KB mode, tap the 20KB or 50KB preset (or type a custom number), then drop your photo. The resizer automatically finds the highest quality that fits under your limit."}},
+    {"@type":"Question","name":"How do I resize an image in pixels?","acceptedAnswer":{"@type":"Answer","text":"Switch to Pixels mode, enter the width (and height if you don't want the aspect ratio locked), and drop your image. You can also set an optional maximum KB at the same time."}},
+    {"@type":"Question","name":"How do I resize an image in cm?","acceptedAnswer":{"@type":"Answer","text":"Use Print size mode: enter the width and height in centimetres and pick a DPI (300 is standard for print and passport photos). The tool converts cm to exact pixels and crops your photo to fit."}},
+    {"@type":"Question","name":"Can I bulk resize images?","acceptedAnswer":{"@type":"Answer","text":"Yes. Drop any number of images, each is processed against the same settings, and you can download them individually or all together as a ZIP file."}},
+    {"@type":"Question","name":"Is my photo uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. All resizing happens locally in your browser using the Canvas API. Your images never leave your device — you can disconnect from the internet after the page loads and it still works."}},
+    {"@type":"Question","name":"How is this different from Canva's image resizer?","acceptedAnswer":{"@type":"Answer","text":"Canva's resizer lives inside the Canva editor and requires an account, and precise size targets are part of paid plans. This tool is free, needs no account, works on exact KB / pixel / cm targets, and never uploads your image."}},
+    {"@type":"Question","name":"Can I resize an image in MB?","acceptedAnswer":{"@type":"Answer","text":"Yes — 1 MB is 1024 KB, so use the 1MB preset or type any MB value multiplied by 1024 into the custom KB box (for example, 2MB = 2048)."}}
+  ]
+}
+</script>
+<style>
+:root{
+  --kraft:#E4D8C3; --kraft-deep:#D2C3A3; --paper:#FAF6EC;
+  --ink:#211D18; --ink-soft:#6B6153; --ink-faint:#8C8270;
+  --franking:#C2412A; --brass:#A8863A; --parcel:#3C6E52;
+  --display:'Bebas Neue',ui-sans-serif,sans-serif;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
+body{font-family:var(--sans);background:var(--kraft);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--franking);outline-offset:2px}
+.mono{font-family:var(--mono)}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-bottom:2px dashed var(--kraft-deep);flex-wrap:wrap;gap:8px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-size:1.5rem;letter-spacing:.02em;text-decoration:none}
+.brand small{font-family:var(--mono);font-weight:400;font-size:.6rem;color:var(--ink-soft);letter-spacing:.1em;text-transform:uppercase}
+header nav{display:flex;gap:14px}
+header nav a{font-size:.8rem;font-weight:600;color:var(--ink-soft);text-decoration:none}
+header nav a:hover{color:var(--ink)}
+
+.wrap{max-width:1160px;margin:0 auto;padding:30px 24px 10px}
+h1{font-size:clamp(1.5rem,3.4vw,2.15rem);font-weight:700;letter-spacing:-.01em;line-height:1.2;max-width:680px}
+.sub{color:var(--ink-soft);margin-top:8px;max-width:620px;font-size:.98rem}
+
+.label-strip{margin-top:24px;border:2px dashed var(--brass);border-radius:10px;background:var(--paper);display:flex;align-items:center;justify-content:space-around;padding:16px 10px;flex-wrap:wrap;gap:10px}
+.label-stat{text-align:center;padding:0 8px}
+.label-stat .num{font-family:var(--mono);font-size:1.5rem;font-weight:600}
+.label-stat .cap{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+.label-arrow{font-size:1.3rem;color:var(--brass)}
+.label-strip .saved .num{color:var(--parcel)}
+
+.bench{display:grid;grid-template-columns:1fr 380px;gap:0;margin-top:20px;border:1px solid var(--kraft-deep);border-radius:14px;overflow:hidden;background:var(--paper);box-shadow:0 20px 50px -32px rgba(33,29,24,.35)}
+@media(max-width:920px){.bench{grid-template-columns:1fr}}
+
+.dropzone{padding:20px;display:flex;flex-direction:column;min-height:420px}
+.drop-area{flex:0 0 auto;border:2px dashed var(--kraft-deep);border-radius:12px;padding:26px 16px;text-align:center;transition:border-color .15s,background .15s;cursor:pointer}
+.drop-area.drag{border-color:var(--franking);background:#FBEFE9}
+.drop-area h3{font-family:var(--display);font-size:1.3rem;letter-spacing:.02em;color:var(--ink)}
+.drop-area p{font-size:.82rem;color:var(--ink-soft);margin-top:4px}
+.drop-btns{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.btn-brass{background:var(--brass);color:#fff;border:0;border-radius:7px;padding:9px 18px;font-size:.85rem;font-weight:600}
+.btn-ghost2{background:transparent;border:1px solid var(--kraft-deep);border-radius:7px;padding:9px 16px;font-size:.85rem;color:var(--ink-soft)}
+input[type=file]{display:none}
+
+.filelist{margin-top:16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1}
+.frow{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;border:1px solid var(--kraft-deep);border-radius:10px;padding:10px;position:relative;background:#fff}
+.frow img{width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid var(--kraft-deep)}
+.frow .fname{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.frow .fsizes{font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);margin-top:2px}
+.frow .fsizes .to{color:var(--parcel);font-weight:600}
+.frow .factions{display:flex;gap:6px;align-items:center}
+.icon-btn{background:transparent;border:1px solid var(--kraft-deep);border-radius:6px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.dl-btn{background:var(--parcel);color:#fff;border:0;border-radius:6px;padding:7px 12px;font-size:.75rem;font-weight:600}
+.stamp{position:absolute;top:-6px;right:6px;transform:rotate(-8deg);font-family:var(--display);font-size:.62rem;letter-spacing:.08em;color:var(--franking);border:2px solid var(--franking);border-radius:5px;padding:1px 6px;background:rgba(255,255,255,.9);opacity:.9}
+.progress-bar{height:4px;background:var(--kraft-deep);border-radius:2px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:var(--brass);width:0%;transition:width .3s}
+
+.zip-row{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+.controls{background:var(--ink);color:#F1ECDF;padding:22px 20px;display:flex;flex-direction:column;gap:18px}
+.controls h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#B7AE9B;margin-bottom:8px}
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;border:1px solid #443C30;border-radius:8px;overflow:hidden}
+.mode-toggle button{background:transparent;border:0;color:#B7AE9B;padding:9px 4px;font-size:.74rem;font-weight:600}
+.mode-toggle button.active{background:var(--brass);color:#1A160F}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset-btn{background:#2A241B;border:1px solid #443C30;color:#F1ECDF;border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:.72rem}
+.preset-btn.active{background:var(--franking);border-color:var(--franking)}
+.custom-kb{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.custom-kb input,.dim-inputs input{width:84px;background:#2A241B;border:1px solid #443C30;border-radius:6px;color:#fff;padding:7px 8px;font-family:var(--mono);font-size:.85rem}
+.dim-inputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dim-inputs .x{color:#B7AE9B;font-family:var(--mono)}
+.chk-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.78rem;color:#D8CFBB}
+.chk-row input{accent-color:var(--brass);width:15px;height:15px}
+input[type=range]{width:100%;accent-color:var(--brass)}
+select{width:100%;background:#2A241B;border:1px solid #443C30;color:#F1ECDF;border-radius:6px;padding:8px;font-size:.82rem;font-family:var(--sans)}
+.opt-kb{margin-top:10px}
+
+.gauge-wrap{text-align:center}
+.gauge-read{font-family:var(--mono);font-size:.85rem;margin-top:4px;color:#D8CFBB}
+.needle{transform-origin:100px 100px;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+
+.btn-run{background:var(--franking);color:#fff;border:0;border-radius:9px;padding:13px;font-size:.95rem;font-weight:700;letter-spacing:.02em;width:100%}
+.btn-run:disabled{background:#5A4A3E;cursor:not-allowed}
+.hint{font-size:.7rem;color:#9B927E;line-height:1.5}
+
+.ad-slot{max-width:1160px;margin:24px auto;padding:0 24px;text-align:center}
+
+.content{max-width:760px;margin:0 auto;padding:46px 24px 20px}
+.content h2{font-family:var(--display);font-size:1.5rem;letter-spacing:.01em;margin:40px 0 12px}
+.content h2:first-child{margin-top:0}
+.content p{margin-bottom:14px;color:#3A342A}
+.content ul{margin:0 0 14px 20px;color:#3A342A}
+.content li{margin-bottom:8px}
+.content a{color:var(--franking)}
+.presetlist{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.presetlist span{background:var(--paper);border:1px solid var(--kraft-deep);border-radius:6px;padding:5px 10px;font-family:var(--mono);font-size:.78rem}
+details{border-bottom:1px solid var(--kraft-deep);padding:14px 0}
+summary{font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";font-family:var(--mono);color:var(--ink-soft)}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:#3A342A;font-size:.94rem}
+
+footer{border-top:2px dashed var(--kraft-deep);margin-top:50px;padding:24px;text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--ink-soft)}
+footer nav{margin-top:8px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+footer nav a{color:var(--ink-soft)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="index.html">ImageResizer<span style="color:var(--brass)">.tech</span> <small>kb · px · cm</small></a>
+  <nav>
+    <a href="guides.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="wrap">
+    <h1>Image Resizer — resize any photo in KB, pixels, or cm, free &amp; online</h1>
+    <p class="sub">A simple image resizer that hits exact targets: a file size in KB, exact pixel dimensions, or a physical print size in cm. Bulk supported. Everything runs <b>in your browser</b> — nothing is ever uploaded.</p>
+
+    <div class="label-strip" id="labelStrip" aria-live="polite">
+      <div class="label-stat"><div class="num mono" id="lblFrom">—</div><div class="cap">original</div></div>
+      <div class="label-arrow">→</div>
+      <div class="label-stat"><div class="num mono" id="lblTo">—</div><div class="cap">resized</div></div>
+      <div class="label-arrow">=</div>
+      <div class="label-stat saved"><div class="num mono" id="lblSaved">—</div><div class="cap">saved</div></div>
+    </div>
+
+    <div class="bench">
+      <div class="dropzone">
+        <div class="drop-area" id="dropArea" tabindex="0" role="button" aria-label="Choose or drop images">
+          <h3>Drop photos here</h3>
+          <p>JPG, PNG, or WebP · bulk supported</p>
+          <div class="drop-btns">
+            <button class="btn-brass" id="chooseBtn">Choose files</button>
+            <button class="btn-ghost2" id="sampleBtn">Try a sample photo</button>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" multiple>
+        </div>
+        <div class="filelist" id="fileList"></div>
+        <div class="zip-row" id="zipRow" hidden>
+          <span class="hint" id="zipHint"></span>
+          <button class="btn-brass" id="zipBtn">Download all (.zip)</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div>
+          <h4>Resize by</h4>
+          <div class="mode-toggle">
+            <button id="modeTarget" class="active">Target KB</button>
+            <button id="modeQuality">Quality %</button>
+            <button id="modePixels">Pixels</button>
+            <button id="modePrint">Print size (cm)</button>
+          </div>
+        </div>
+
+        <div id="targetPanel">
+          <h4>Common form limits</h4>
+          <div class="presets" id="presetBtns">
+            <button class="preset-btn active" data-kb="20">20 KB</button>
+            <button class="preset-btn" data-kb="50">50 KB</button>
+            <button class="preset-btn" data-kb="100">100 KB</button>
+            <button class="preset-btn" data-kb="200">200 KB</button>
+            <button class="preset-btn" data-kb="500">500 KB</button>
+            <button class="preset-btn" data-kb="1024">1 MB</button>
+          </div>
+          <div class="custom-kb">
+            <span class="hint">or custom:</span>
+            <input type="number" id="customKB" min="1" placeholder="e.g. 75" aria-label="Custom target size in KB">
+            <span class="hint">KB</span>
+          </div>
+          <div style="margin-top:12px">
+            <h4>Max dimension</h4>
+            <select id="maxWidth">
+              <option value="0">Keep original size</option>
+              <option value="1920">1920px (Full HD)</option>
+              <option value="1280">1280px</option>
+              <option value="800" selected>800px</option>
+              <option value="500">500px (passport-style)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="qualityPanel" hidden>
+          <h4>Quality: <span id="qualityVal">70</span>%</h4>
+          <input type="range" id="qualitySlider" min="1" max="100" value="70">
+        </div>
+
+        <div id="pixelPanel" hidden>
+          <h4>Dimensions in pixels</h4>
+          <div class="dim-inputs">
+            <input type="number" id="pixW" min="8" placeholder="width" aria-label="Width in pixels">
+            <span class="x">×</span>
+            <input type="number" id="pixH" min="8" placeholder="height" aria-label="Height in pixels">
+            <span class="hint">px</span>
+          </div>
+          <label class="chk-row"><input type="checkbox" id="lockAspect" checked> Lock aspect ratio (height auto)</label>
+          <div class="custom-kb opt-kb">
+            <span class="hint">optional max size:</span>
+            <input type="number" id="pixMaxKB" min="1" placeholder="e.g. 100" aria-label="Optional maximum size in KB">
+            <span class="hint">KB</span>
+          </div>
+        </div>
+
+        <div id="printPanel" hidden>
+          <h4>Physical size</h4>
+          <div class="dim-inputs">
+            <input type="number" id="cmW" min="0.5" step="0.1" placeholder="width" aria-label="Width in centimetres">
+            <span class="x">×</span>
+            <input type="number" id="cmH" min="0.5" step="0.1" placeholder="height" aria-label="Height in centimetres">
+            <span class="hint">cm</span>
+          </div>
+          <div style="margin-top:10px">
+            <h4>Resolution (DPI)</h4>
+            <select id="dpiSel">
+              <option value="300" selected>300 DPI — print &amp; passport standard</option>
+              <option value="150">150 DPI — decent print</option>
+              <option value="96">96 DPI — screen</option>
+              <option value="72">72 DPI — web</option>
+            </select>
+          </div>
+          <div class="custom-kb opt-kb">
+            <span class="hint">optional max size:</span>
+            <input type="number" id="printMaxKB" min="1" placeholder="e.g. 50" aria-label="Optional maximum size in KB">
+            <span class="hint">KB</span>
+          </div>
+          <p class="hint" style="margin-top:8px">Common: passport photo 3.5 × 4.5 cm · US passport 5.1 × 5.1 cm. Photo is centre-cropped to fit the exact shape.</p>
+        </div>
+
+        <div>
+          <h4>Output format</h4>
+          <select id="outFormat">
+            <option value="image/jpeg" selected>JPEG (best for small targets)</option>
+            <option value="keep">Keep original format</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 200 110" width="100%" height="90" aria-hidden="true">
+            <path id="arcRed" fill="none" stroke="var(--franking)" stroke-width="10" stroke-linecap="round"/>
+            <path id="arcBrass" fill="none" stroke="var(--brass)" stroke-width="10" stroke-linecap="round"/>
+            <path id="arcGreen" fill="none" stroke="var(--parcel)" stroke-width="10" stroke-linecap="round"/>
+            <line id="needle" class="needle" x1="100" y1="100" x2="100" y2="28" stroke="#F1ECDF" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="6" fill="#F1ECDF"/>
+          </svg>
+          <div class="gauge-read" id="gaugeRead">select a target to begin</div>
+        </div>
+
+        <button class="btn-run" id="runBtn" disabled>Resize</button>
+        <p class="hint">Files are processed one at a time, entirely on your device. Larger batches take longer but never leave your browser.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD SLOT 1: AdSense approval ke baad code yahan paste karo -->
+  <div class="ad-slot" id="ad-1"></div>
+
+  <article class="content">
+    <h2>One image resizer, three kinds of target</h2>
+    <p>Most tools make you pick between a compressor, a pixel resizer, and a print tool. This free online image resizer does all three, because real tasks usually mix them — an exam form wants a photo under 50KB <em>and</em> at a certain pixel size; a passport office wants 3.5 × 4.5 cm <em>and</em> under a KB cap. Set the target that matters, add an optional file-size limit, and the tool works backward to hit it.</p>
+
+    <h2>Resize an image in KB</h2>
+    <p>Pick a preset — 20KB, 50KB, 100KB, 200KB, 500KB, 1MB — or type any custom number. The resizer tests a range of quality levels and narrows in on the highest one that still fits under your limit, shrinking dimensions only if quality reduction alone can't get there. Need it in MB? 1 MB = 1024 KB, so type 2048 for 2MB.</p>
+    <div class="presetlist">
+      <span>SSC CGL/CHSL: 20–50KB</span><span>UPSC: 200KB max</span><span>NEET/JEE: 100–200KB</span>
+      <span>Passport photo: 20–50KB</span><span>US visa (DS-160): under 240KB</span><span>Email attachment: under 1–2MB</span>
+    </div>
+    <p>Read the full walkthrough: <a href="resize-image-to-20kb-50kb-100kb.html">how to resize an image to 20KB, 50KB, or 100KB for application forms</a>.</p>
+
+    <h2>Resize an image in pixels</h2>
+    <p>Switch to Pixels mode and type a width — with aspect ratio locked, the height follows automatically so nothing gets stretched. Uncheck the lock to force an exact width × height; the photo is centre-cropped to fill the shape rather than distorted. You can also add an optional max KB, so the output meets a pixel requirement and a file-size requirement at the same time.</p>
+
+    <h2>Resize an image in cm — print &amp; passport photos</h2>
+    <p>Screens think in pixels, but forms and printers think in centimetres. Print size mode takes a width and height in cm plus a DPI setting and converts them into exact pixels (at 300 DPI, the print and passport standard, 3.5 × 4.5 cm becomes 413 × 531 px). The photo is centre-cropped to the exact shape, and you can cap the file size in KB at the same time — which is precisely what passport and visa portals ask for. More detail: <a href="resize-image-in-cm-for-passport-photos.html">resizing images in cm for passport photos</a>.</p>
+
+    <h2>Bulk image resizer</h2>
+    <p>Drop as many photos as you like — each one is processed against the same settings, one at a time, right on your device. Download results individually or grab everything at once as a ZIP. Because nothing is uploaded, a batch of fifty photos doesn't queue behind anyone else's — your own hardware is the only limit. See the <a href="bulk-resize-images.html">bulk resizing guide</a> for tips on large batches.</p>
+
+    <h2>Simple, free, and fully online — without the upload</h2>
+    <p>This is an online image resizer in the sense that it lives at a URL — but unlike most, it never sends your image anywhere. The entire engine ships to your browser as JavaScript and runs locally, which makes it faster for large files, safe for ID photos and documents, and free to offer without limits: no sign-up, no watermark, no daily cap.</p>
+
+    <h2>The exact sizes people look for</h2>
+    <p>Searches for an image resizer to a specific size cluster around a handful of numbers. An image resizer to 20KB or 50KB covers most exam and passport forms. 100KB or 200KB fits looser upload limits. Less common but still frequent: 500KB, 1MB, 30KB, 10KB, 15KB, and 40KB. Type any of these into the custom box above — the tool works the same way regardless of the number.</p>
+
+    <h2>Use scores of quality wisely</h2>
+    <p>Very tight targets — a large photo squeezed into 10–20KB — always cost some sharpness. The tool keeps as much resolution as it can by preferring quality reduction over dimension reduction, but if a result looks too soft for your purpose, try a slightly larger KB target or a smaller pixel size first.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>How do I resize an image to 20KB or 50KB?</summary><p>Choose Target KB mode, tap the 20KB or 50KB preset (or type a custom number), then drop your photo. The resizer automatically finds the highest quality that fits under your limit.</p></details>
+    <details><summary>How do I resize an image in pixels?</summary><p>Switch to Pixels mode, enter the width (and height if you unlock the aspect ratio), and drop your image. Add an optional max KB if you need both constraints met.</p></details>
+    <details><summary>How do I resize an image in cm?</summary><p>Use Print size mode: enter width and height in centimetres and pick a DPI — 300 is standard for print and passport photos. The tool converts cm to exact pixels and centre-crops your photo to fit.</p></details>
+    <details><summary>Can I bulk resize images?</summary><p>Yes — drop any number of images, and download them individually or together as a ZIP.</p></details>
+    <details><summary>Is my photo uploaded to a server?</summary><p>No. All resizing happens locally in your browser. You could disconnect from the internet after the page loads and it would still work.</p></details>
+    <details><summary>How is this different from Canva's image resizer?</summary><p>Canva's resizer lives inside its editor, needs an account, and exact-size export sits behind paid plans. This tool is free, account-free, works on exact KB / pixel / cm targets, and never uploads your image.</p></details>
+    <details><summary>Can I resize an image in MB?</summary><p>Yes — 1 MB is 1024 KB. Use the 1MB preset, or type the MB value × 1024 into the custom box (2MB = 2048).</p></details>
+  </article>
+
+  <!-- AD SLOT 2: AdSense approval ke baad code yahan paste karo -->
+  <div class="ad-slot" id="ad-2"></div>
+</main>
+
+<footer>
+  IMAGERESIZER.TECH · processing happens entirely in your browser · no image is ever uploaded · © 2026
+  <nav>
+    <a href="guides.html">Guides</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms.html">Terms</a>
+  </nav>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================= gauge ================= */
+function polar(cx,cy,r,gaugeDeg){
+  const std=(180-gaugeDeg)*Math.PI/180;
+  return {x:cx+r*Math.cos(std), y:cy-r*Math.sin(std)};
+}
+function arcPath(cx,cy,r,g0,g1){
+  const p0=polar(cx,cy,r,g0), p1=polar(cx,cy,r,g1);
+  const large=(g1-g0)>180?1:0;
+  return `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
+}
+document.getElementById("arcRed").setAttribute("d", arcPath(100,100,80,0,72));
+document.getElementById("arcBrass").setAttribute("d", arcPath(100,100,80,72,135));
+document.getElementById("arcGreen").setAttribute("d", arcPath(100,100,80,135,180));
+function setGauge(pct){
+  const clamped=Math.max(0,Math.min(100,pct));
+  const deg=-90+(clamped/100)*180;
+  document.getElementById("needle").setAttribute("transform",`rotate(${deg} 100 100)`);
+}
+setGauge(50);
+
+/* ================= state ================= */
+let mode="target"; // target | quality | pixels | print
+let targetKB=20;
+let qualityPct=70;
+let maxWidthOpt=800;
+let outFormat="image/jpeg";
+const files=[];
+let seq=0;
+
+/* ================= helpers ================= */
+function fmtBytes(b){
+  if(b>=1024*1024) return (b/1024/1024).toFixed(2)+" MB";
+  return Math.round(b/1024)+" KB";
+}
+function canvasToBlob(canvas,type,quality){
+  return new Promise(res=>canvas.toBlob(res,type,quality));
+}
+function loadImage(fileOrBlob){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(fileOrBlob);
+    const img=new Image();
+    img.onload=()=>resolve({img,url});
+    img.onerror=reject;
+    img.src=url;
+  });
+}
+function drawCover(ctx,img,outW,outH){
+  const w=img.naturalWidth,h=img.naturalHeight;
+  const scale=Math.max(outW/w,outH/h);
+  const sw=outW/scale, sh=outH/scale;
+  const sx=(w-sw)/2, sy=(h-sh)/2;
+  ctx.drawImage(img,sx,sy,sw,sh,0,0,outW,outH);
+}
+
+/* direction-aware target search (tested): only shrinks width when NO quality
+   at current width can get under target */
+async function compressToTarget({img,targetBytes,mimeType,maxWidthCap}){
+  let width0=img.naturalWidth, height0=img.naturalHeight;
+  if(maxWidthCap && width0>maxWidthCap){ height0=Math.round(height0*maxWidthCap/width0); width0=maxWidthCap; }
+  let width=width0, height=height0;
+  const isPNG = mimeType==="image/png";
+  const minQuality=0.05, maxQuality=0.95, qualitySteps=isPNG?1:8, widthSteps=6, minWidth=80, shrinkFactor=0.85;
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d");
+  let smallestBlob=null, smallestSize=Infinity, smallestW=width, smallestH=height;
+  for(let w=0; w<widthSteps; w++){
+    canvas.width=width; canvas.height=height;
+    ctx.clearRect(0,0,width,height);
+    ctx.drawImage(img,0,0,width,height);
+    let lo=minQuality, hi=maxQuality, bestBlob=null, bestSize=null, bestQ=null;
+    for(let i=0;i<qualitySteps;i++){
+      const q=isPNG?undefined:(lo+hi)/2;
+      const blob=await canvasToBlob(canvas,mimeType,q);
+      if(blob.size<smallestSize){smallestSize=blob.size; smallestBlob=blob; smallestW=width; smallestH=height;}
+      if(blob.size<=targetBytes){ bestBlob=blob; bestSize=blob.size; bestQ=q; if(!isPNG) lo=q; }
+      else if(!isPNG){ hi=q; }
+    }
+    if(bestBlob) return {blob:bestBlob, width, height, quality:bestQ, size:bestSize};
+    if(width<=minWidth) break;
+    const newWidth=Math.max(minWidth, Math.round(width*shrinkFactor));
+    height=Math.round(newWidth*height0/width0);
+    width=newWidth;
+  }
+  return smallestBlob ? {blob:smallestBlob, width:smallestW, height:smallestH, quality:null, size:smallestSize} : null;
+}
+
+async function compressToQuality({img,qualityFrac,mimeType,maxWidthCap}){
+  let width=img.naturalWidth, height=img.naturalHeight;
+  if(maxWidthCap && width>maxWidthCap){ height=Math.round(height*maxWidthCap/width); width=maxWidthCap; }
+  const canvas=document.createElement("canvas");
+  canvas.width=width; canvas.height=height;
+  const ctx=canvas.getContext("2d");
+  ctx.drawImage(img,0,0,width,height);
+  const blob=await canvasToBlob(canvas,mimeType, mimeType==="image/png"?undefined:qualityFrac);
+  return {blob,width,height,quality:qualityFrac,size:blob.size};
+}
+
+/* fixed output dimensions (pixels/print modes), optional max-bytes quality search */
+async function compressAtFixedDims({img,outW,outH,cover,mimeType,maxBytes}){
+  const canvas=document.createElement("canvas");
+  canvas.width=outW; canvas.height=outH;
+  const ctx=canvas.getContext("2d");
+  if(cover){ drawCover(ctx,img,outW,outH); } else { ctx.drawImage(img,0,0,outW,outH); }
+  const isPNG=mimeType==="image/png";
+  if(!maxBytes || isPNG){
+    const blob=await canvasToBlob(canvas,mimeType,isPNG?undefined:0.9);
+    return {blob,width:outW,height:outH,quality:isPNG?null:0.9,size:blob.size,missed:isPNG&&maxBytes?blob.size>maxBytes:false};
+  }
+  let lo=0.05,hi=0.95,best=null,smallest=null;
+  for(let i=0;i<8;i++){
+    const q=(lo+hi)/2;
+    const blob=await canvasToBlob(canvas,mimeType,q);
+    if(!smallest||blob.size<smallest.size) smallest={blob,quality:q,size:blob.size};
+    if(blob.size<=maxBytes){ best={blob,quality:q,size:blob.size}; lo=q; } else { hi=q; }
+  }
+  const r=best||smallest;
+  return {blob:r.blob,width:outW,height:outH,quality:r.quality,size:r.size,missed:!best};
+}
+
+/* ================= UI: modes ================= */
+const modeBtns={target:document.getElementById("modeTarget"),quality:document.getElementById("modeQuality"),pixels:document.getElementById("modePixels"),print:document.getElementById("modePrint")};
+const panels={target:document.getElementById("targetPanel"),quality:document.getElementById("qualityPanel"),pixels:document.getElementById("pixelPanel"),print:document.getElementById("printPanel")};
+Object.entries(modeBtns).forEach(([m,btn])=>{
+  btn.addEventListener("click",()=>{
+    mode=m;
+    Object.values(modeBtns).forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    Object.entries(panels).forEach(([k,p])=>p.hidden=(k!==m));
+    updateGaugeIdle();
+  });
+});
+
+document.querySelectorAll(".preset-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".preset-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    targetKB=+btn.dataset.kb;
+    document.getElementById("customKB").value="";
+    updateGaugeIdle();
+  });
+});
+document.getElementById("customKB").addEventListener("input",e=>{
+  const v=+e.target.value;
+  if(v>0){
+    targetKB=v;
+    document.querySelectorAll(".preset-btn").forEach(b=>b.classList.remove("active"));
+    updateGaugeIdle();
+  }
+});
+document.getElementById("qualitySlider").addEventListener("input",e=>{
+  qualityPct=+e.target.value;
+  document.getElementById("qualityVal").textContent=qualityPct;
+  updateGaugeIdle();
+});
+document.getElementById("maxWidth").addEventListener("change",e=>{maxWidthOpt=+e.target.value;});
+document.getElementById("outFormat").addEventListener("change",e=>{outFormat=e.target.value;});
+const pixW=document.getElementById("pixW"), pixH=document.getElementById("pixH"), lockAspect=document.getElementById("lockAspect");
+lockAspect.addEventListener("change",()=>{ pixH.disabled=lockAspect.checked; updateGaugeIdle(); });
+pixH.disabled=true;
+[pixW,pixH,document.getElementById("cmW"),document.getElementById("cmH")].forEach(el=>el.addEventListener("input",updateGaugeIdle));
+document.getElementById("dpiSel").addEventListener("change",updateGaugeIdle);
+
+function printPx(){
+  const cw=+document.getElementById("cmW").value, ch=+document.getElementById("cmH").value, dpi=+document.getElementById("dpiSel").value;
+  if(cw>0&&ch>0) return {w:Math.round(cw/2.54*dpi), h:Math.round(ch/2.54*dpi)};
+  return null;
+}
+function updateGaugeIdle(){
+  const g=document.getElementById("gaugeRead");
+  if(mode==="quality"){ setGauge(qualityPct); g.textContent=qualityPct+"% quality selected"; }
+  else if(mode==="target"){ g.textContent="target: "+targetKB+" KB — resize to see result"; }
+  else if(mode==="pixels"){
+    const w=+pixW.value;
+    g.textContent = w>0 ? ("output: "+w+(lockAspect.checked?" px wide (height auto)":" × "+(+pixH.value||"?")+" px")) : "enter a width in pixels";
+  } else {
+    const p=printPx();
+    g.textContent = p ? ("output: "+p.w+" × "+p.h+" px at chosen DPI") : "enter width × height in cm";
+  }
+}
+updateGaugeIdle();
+
+/* ================= file intake ================= */
+const dropArea=document.getElementById("dropArea");
+const fileInput=document.getElementById("fileInput");
+const fileListEl=document.getElementById("fileList");
+const runBtn=document.getElementById("runBtn");
+const chooseBtn=document.getElementById("chooseBtn");
+
+chooseBtn.addEventListener("click",()=>fileInput.click());
+dropArea.addEventListener("click",(e)=>{ if(e.target===chooseBtn||e.target.id==="sampleBtn")return; fileInput.click();});
+dropArea.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" ") fileInput.click();});
+["dragenter","dragover"].forEach(ev=>dropArea.addEventListener(ev,e=>{e.preventDefault();dropArea.classList.add("drag");}));
+["dragleave","drop"].forEach(ev=>dropArea.addEventListener(ev,e=>{e.preventDefault();dropArea.classList.remove("drag");}));
+dropArea.addEventListener("drop",e=>{ addFiles(e.dataTransfer.files); });
+fileInput.addEventListener("change",e=>{ addFiles(e.target.files); fileInput.value=""; });
+
+function addFiles(fileListArg){
+  Array.from(fileListArg).forEach(f=>{
+    if(!f.type.startsWith("image/")) return;
+    const id="f"+(seq++);
+    const rec={id,file:f,name:f.name,originalSize:f.size,status:"pending"};
+    files.push(rec);
+    renderRow(rec);
+  });
+  runBtn.disabled=files.length===0;
+  updateLabelStrip();
+}
+
+function renderRow(rec){
+  const row=document.createElement("div");
+  row.className="frow";
+  row.id=rec.id;
+  const thumbURL=URL.createObjectURL(rec.file);
+  row.innerHTML=`
+    <img src="${thumbURL}" alt="">
+    <div>
+      <div class="fname">${rec.name}</div>
+      <div class="fsizes"><span class="from">${fmtBytes(rec.originalSize)}</span> <span class="arrowmini">→</span> <span class="to">pending</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="pf-${rec.id}"></div></div>
+    </div>
+    <div class="factions">
+      <button class="icon-btn" aria-label="Remove" data-remove="${rec.id}">✕</button>
+    </div>`;
+  fileListEl.appendChild(row);
+  rec.rowEl=row;
+  row.querySelector("[data-remove]").addEventListener("click",()=>{
+    const idx=files.findIndex(x=>x.id===rec.id);
+    if(idx>-1) files.splice(idx,1);
+    row.remove();
+    runBtn.disabled=files.length===0;
+    updateLabelStrip();
+  });
+}
+
+document.getElementById("sampleBtn").addEventListener("click",async()=>{
+  const c=document.createElement("canvas"); c.width=2000; c.height=1333;
+  const ctx=c.getContext("2d");
+  const sky=ctx.createLinearGradient(0,0,0,900);
+  sky.addColorStop(0,"#5B8FB5"); sky.addColorStop(1,"#EFD9A8");
+  ctx.fillStyle=sky; ctx.fillRect(0,0,2000,1333);
+  ctx.beginPath(); ctx.arc(1550,300,140,0,Math.PI*2); ctx.fillStyle="#F5E6A8"; ctx.fill();
+  ctx.fillStyle="#4A5A46";
+  ctx.beginPath(); ctx.moveTo(0,950); ctx.lineTo(500,600); ctx.lineTo(950,950); ctx.closePath(); ctx.fill();
+  ctx.fillStyle="#3A4A38";
+  ctx.beginPath(); ctx.moveTo(650,950); ctx.lineTo(1250,500); ctx.lineTo(1900,950); ctx.closePath(); ctx.fill();
+  ctx.fillStyle="#7A9C6F"; ctx.fillRect(0,950,2000,383);
+  const blob=await canvasToBlob(c,"image/png");
+  const file=new File([blob],"sample-photo.png",{type:"image/png"});
+  addFiles([file]);
+});
+
+/* ================= label strip ================= */
+function updateLabelStrip(){
+  const fromTotal=files.reduce((s,f)=>s+f.originalSize,0);
+  const toTotal=files.reduce((s,f)=>s+(f.resultSize||0),0);
+  const anyDone=files.some(f=>f.status==="done");
+  document.getElementById("lblFrom").textContent = files.length? fmtBytes(fromTotal) : "—";
+  document.getElementById("lblTo").textContent = anyDone ? fmtBytes(toTotal) : "—";
+  document.getElementById("lblSaved").textContent = (anyDone && fromTotal>0) ? Math.max(0,Math.round((1-toTotal/fromTotal)*100))+"%" : "—";
+}
+
+/* ================= run ================= */
+function validSettings(){
+  if(mode==="pixels"){
+    const w=+pixW.value;
+    if(!(w>=8)) return "enter a width in pixels first (min 8)";
+    if(!lockAspect.checked && !(+pixH.value>=8)) return "enter a height, or lock aspect ratio";
+  }
+  if(mode==="print"){
+    if(!printPx()) return "enter width × height in cm first";
+  }
+  return null;
+}
+
+runBtn.addEventListener("click",async()=>{
+  const err=validSettings();
+  if(err){ document.getElementById("gaugeRead").textContent=err; return; }
+  runBtn.disabled=true; runBtn.textContent="Resizing…";
+  for(const rec of files){
+    if(rec.status==="done") continue;
+    rec.status="working";
+    const pf=document.getElementById("pf-"+rec.id); if(pf) pf.style.width="30%";
+    try{
+      const {img,url}=await loadImage(rec.file);
+      const mime = outFormat==="keep" ? rec.file.type : outFormat;
+      let result;
+      if(mode==="target"){
+        result=await compressToTarget({img,targetBytes:targetKB*1024,mimeType:mime,maxWidthCap:maxWidthOpt>0?maxWidthOpt:null});
+      } else if(mode==="quality"){
+        result=await compressToQuality({img,qualityFrac:qualityPct/100,mimeType:mime,maxWidthCap:maxWidthOpt>0?maxWidthOpt:null});
+      } else if(mode==="pixels"){
+        const w=+pixW.value;
+        const outW=Math.round(w);
+        const outH=lockAspect.checked?Math.round(w*img.naturalHeight/img.naturalWidth):Math.round(+pixH.value);
+        const maxKBv=+document.getElementById("pixMaxKB").value;
+        result=await compressAtFixedDims({img,outW,outH,cover:!lockAspect.checked,mimeType:mime,maxBytes:maxKBv>0?maxKBv*1024:null});
+      } else {
+        const p=printPx();
+        const maxKBv=+document.getElementById("printMaxKB").value;
+        result=await compressAtFixedDims({img,outW:p.w,outH:p.h,cover:true,mimeType:mime,maxBytes:maxKBv>0?maxKBv*1024:null});
+      }
+      URL.revokeObjectURL(url);
+      if(pf) pf.style.width="100%";
+      rec.status="done";
+      rec.resultBlob=result.blob; rec.resultSize=result.size;
+      rec.resultW=result.width; rec.resultH=result.height;
+      const toEl=rec.rowEl.querySelector(".to");
+      toEl.textContent=fmtBytes(result.size)+" · "+result.width+"×"+result.height;
+      if(result.missed){ toEl.textContent+=" (couldn't fit KB cap at these dimensions)"; }
+      const actions=rec.rowEl.querySelector(".factions");
+      const dlBtn=document.createElement("button");
+      dlBtn.className="dl-btn"; dlBtn.textContent="Download";
+      dlBtn.addEventListener("click",()=>{
+        const a=document.createElement("a");
+        a.href=URL.createObjectURL(rec.resultBlob);
+        a.download=rec.name.replace(/\.[^.]+$/,"")+"-resized."+(mime.split("/")[1]||"jpg").replace("jpeg","jpg");
+        a.click();
+      });
+      actions.prepend(dlBtn);
+      if(mode==="target"){
+        const tolerance=Math.max(1024,targetKB*1024*0.08);
+        if(Math.abs(result.size-targetKB*1024)<=tolerance){
+          const stamp=document.createElement("div");
+          stamp.className="stamp"; stamp.textContent="ON TARGET";
+          rec.rowEl.appendChild(stamp);
+        }
+      }
+      if(result.quality!==null && result.quality!==undefined) setGauge(result.quality*100);
+      document.getElementById("gaugeRead").textContent = result.width+"×"+result.height+" · "+fmtBytes(result.size);
+    }catch(err2){
+      rec.status="error";
+      const toEl=rec.rowEl.querySelector(".to");
+      toEl.textContent="error"; toEl.style.color="var(--franking)";
+      console.error(err2);
+    }
+    updateLabelStrip();
+  }
+  runBtn.disabled=false; runBtn.textContent="Resize";
+  const doneCount=files.filter(f=>f.status==="done").length;
+  const zipRow=document.getElementById("zipRow");
+  if(doneCount>1){
+    zipRow.hidden=false;
+    document.getElementById("zipHint").textContent=doneCount+" files ready";
+  }
+});
+
+/* ================= zip download ================= */
+document.getElementById("zipBtn").addEventListener("click",async()=>{
+  const zip=new JSZip();
+  files.filter(f=>f.status==="done").forEach(f=>{
+    const ext=(f.resultBlob.type.split("/")[1]||"jpg").replace("jpeg","jpg");
+    zip.file(f.name.replace(/\.[^.]+$/,"")+"-resized."+ext, f.resultBlob);
+  });
+  const content=await zip.generateAsync({type:"blob"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(content);
+  a.download="imageresizer-tech.zip";
+  a.click();
+});
+
+})();
+</script>
+</body>
+</html>
